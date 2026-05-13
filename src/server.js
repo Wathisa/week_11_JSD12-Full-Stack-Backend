@@ -1,7 +1,13 @@
 import express from "express";
+import cors from "cors";
+
 import { users } from "./fakeData/fakeUsers.js";
 
 const app = express();
+
+app.use(cors());
+
+app.use(express.json());
 
 app.get("/", (req, res) => {
   res.send(`<!doctype html>
@@ -39,6 +45,12 @@ app.get("/", (req, res) => {
 app.get("/users", (req, res) => {
   res.json(users);
 });
+
+// app.post();
+
+// app.delete();
+
+// app.put();
 
 const PORT = 3002;
 
