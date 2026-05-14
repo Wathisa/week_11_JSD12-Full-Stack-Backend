@@ -1,0 +1,25 @@
+### Read all products
+GET http://localhost:3002/api/products
+
+### Create a new product
+POST http://localhost:3002/api/products
+Content-Type: application/json
+
+{
+    "name": "AirPods Pro",
+    "price": 8990,
+    "stock": 12
+}
+
+### Update a product
+PUT http://localhost:3002/api/products/1
+Content-Type: application/json
+
+{
+    "name": "Macbook Air M4",
+    "price": 39900,
+    "stock": 7
+}
+
+### Delete a product
+DELETE http://localhost:3002/api/products/1
