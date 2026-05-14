@@ -1,0 +1,25 @@
+### Read all notes
+GET http://localhost:3002/api/notes
+
+### Create a new note
+POST http://localhost:3002/api/notes
+Content-Type: application/json
+
+{
+    "title": "Backend Homework",
+    "content": "Create notes routes with simple CRUD operations.",
+    "category": "Study"
+}
+
+### Update a note
+PUT http://localhost:3002/api/notes/1
+Content-Type: application/json
+
+{
+    "title": "Updated Shopping List",
+    "content": "Buy milk, eggs, bread, coffee and fruit.",
+    "category": "Personal"
+}
+
+### Delete a note
+DELETE http://localhost:3002/api/notes/1
