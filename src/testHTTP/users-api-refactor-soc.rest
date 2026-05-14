@@ -20,3 +20,6 @@ Content-Type: application/json
     "email": "wathisa@example.com",
     "password": "pass123"
 }
+
+### Delete a user 
+DELETE http://localhost:3002/api/users/1
