@@ -7,7 +7,7 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "dev": "node --watch src/server.js"
+    "dev": "node --env-file=.env --watch src/server.js"
   },
   "dependencies": {
     "cors": "^2.8.6",
