@@ -1,9 +1,9 @@
 import express from "express";
 import cors from "cors";
 
-import { users } from "./fakeData/fakeUsers.js";
 import { router as apiRoutes } from "./routes/index.js";
 import { connectDB } from "./config/mongodb.js";
+import { connectSupabase } from "./config/supabase.js";
 
 const app = express();
 
@@ -46,9 +46,10 @@ app.get("/", (req, res) => {
   </html>`);
 });
 
-const PORT = 3002;
+const PORT = process.env.PORT || 3002;
 
 await connectDB();
+await connectSupabase();
 
 app.listen(PORT, () => {
   console.log(`Server running on PORT: ${PORT} 🌎`);
