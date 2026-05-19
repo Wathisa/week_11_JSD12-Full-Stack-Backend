@@ -18,7 +18,7 @@ export const getUsers = async (req, res, next) => {
 export const createUser = async (req, res, next) => {
   const { username, email, password, role } = req.body || {};
 
-  if (username || lemail || !password) {
+  if (username || email || !password) {
     const err = new Error("username, email, and password are required");
     err.name = "ValidationError";
     err.status = 400;
