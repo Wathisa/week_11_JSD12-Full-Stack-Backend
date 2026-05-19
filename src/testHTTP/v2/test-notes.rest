@@ -1,0 +1,33 @@
+# MongoDB - Notes API (v2)
+# Base: /api/v2/notes
+#
+# IDs in MongoDB are ObjectIds - replace the placeholder below with a real one
+# after running the POST request.
+#
+# @id = paste-a-real-objectid-here
+
+### Read all notes (MongoDB)
+GET http://localhost:3002/api/v2/notes
+
+### Create a new note (MongoDB)
+POST http://localhost:3002/api/v2/notes
+Content-Type: application/json
+
+{
+    "title": "Mongo Note",
+    "content": "Practice CRUD for MongoDB routes in v2.",
+    "category": "Study"
+}
+
+### Update a note (MongoDB) - replace the ObjectId with a real id from POST response
+PUT http://localhost:3002/api/v2/notes/682aabd62ef0f8ebf2e12345
+Content-Type: application/json
+
+{
+    "title": "Mongo Note Updated",
+    "content": "MongoDB CRUD routes are ready for testing.",
+    "category": "Work"
+}
+
+### Delete a note (MongoDB) - replace the ObjectId with a real id from POST response
+DELETE http://localhost:3002/api/v2/notes/682aabd62ef0f8ebf2e12345

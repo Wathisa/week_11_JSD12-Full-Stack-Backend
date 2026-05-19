@@ -1,0 +1,33 @@
+# MongoDB - Users API (v2)
+# Base: /api/v2/users
+#
+# IDs in MongoDB are ObjectIds - replace the placeholder below with a real one
+# after running the POST request.
+#
+# @id = paste-a-real-objectid-here
+
+### Read all users (MongoDB)
+GET http://localhost:3002/api/v2/users
+
+### Create a new user (MongoDB)
+POST http://localhost:3002/api/v2/users
+Content-Type: application/json
+
+{
+    "username": "Mongo User",
+    "role": "user",
+    "email": "mongo-user@example.com",
+    "password": "password123"
+}
+
+### Update a user (MongoDB) - replace the ObjectId with a real id from POST response
+PUT http://localhost:3002/api/v2/users/682aabd62ef0f8ebf2e12345
+Content-Type: application/json
+
+{
+    "username": "Mongo User Updated",
+    "role": "admin"
+}
+
+### Delete a user (MongoDB) - replace the ObjectId with a real id from POST response
+DELETE http://localhost:3002/api/v2/users/682aabd62ef0f8ebf2e12345

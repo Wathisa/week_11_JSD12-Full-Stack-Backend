@@ -1,0 +1,33 @@
+# Supabase / PostgreSQL - Notes API (v2)
+# Base: /api/v2/notes/pg
+#
+# IDs in Supabase are UUIDs - replace the placeholder below with a real one
+# after running the POST request.
+#
+# @id = paste-a-real-uuid-here
+
+### Read all notes (Supabase)
+GET http://localhost:3002/api/v2/notes/pg
+
+### Create a new note (Supabase)
+POST http://localhost:3002/api/v2/notes/pg
+Content-Type: application/json
+
+{
+    "title": "Meeting Summary",
+    "content": "Review API routes and prepare CRUD testing for Supabase.",
+    "category": "Work"
+}
+
+### Update a note (Supabase) - replace the UUID with a real id from POST response
+PUT http://localhost:3002/api/v2/notes/pg/37295dec-11ce-43a0-bec7-7c2339608179
+Content-Type: application/json
+
+{
+    "title": "Updated Meeting Summary",
+    "content": "CRUD routes for notes are ready to test.",
+    "category": "Study"
+}
+
+### Delete a note (Supabase) - replace the UUID with a real id from POST response
+DELETE http://localhost:3002/api/v2/notes/pg/37295dec-11ce-43a0-bec7-7c2339608179

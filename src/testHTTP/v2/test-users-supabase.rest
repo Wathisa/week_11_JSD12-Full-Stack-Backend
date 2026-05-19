@@ -14,10 +14,10 @@ POST http://localhost:3002/api/v2/users/pg
 Content-Type: application/json
 
 {
-    "username": "Charlie2",
+    "username": "sunshinebaby",
     "role": "user",
-    "email": "charlie2@example.com",
-    "password": "password123"
+    "email": "sunshinebaby@example.com",
+    "password": "pw123456"
 }
 
 ### Update a user (Supabase) — replace the UUID with a real id from POST response

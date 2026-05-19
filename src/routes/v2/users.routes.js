@@ -24,51 +24,69 @@ router.post("/", async (req, res) => {
   const { username, email, password, role } = req.body || {};
 
   if (!username || !email || !password) {
-    return res.status(400).json({ success: false, error: err });
+    return res.status(400).json({
+      success: false,
+      error: "username, email and password are required",
+    });
   }
 
   try {
     const doc = await User.create({ username, email, password, role });
-    console.log(doc);
     return res.status(201).json({ success: true, data: userResponse(doc) });
   } catch (err) {
-    return res.status(400).json({ success: false, error: err });
+    return res.status(400).json({ success: false, error: err.message });
   }
 });
 
-// router.put("/:id", async (req, res) => {
-//   const user = users.find((u) => u.id === req.params.id);
+router.put("/:id", async (req, res) => {
+  const { id } = req.params;
+  const { username, email, password, role } = req.body || {};
 
-//   if (!user) {
-//     return res.status(404).json({ error: "User not found!" });
-//   }
+  const updatePayload = {};
 
-//   const { username, email, password } = req.body;
+  if (username !== undefined) updatePayload.username = username;
+  if (email !== undefined) updatePayload.email = email;
+  if (password !== undefined) updatePayload.password = password;
+  if (role !== undefined) updatePayload.role = role;
 
-//   if (!username || !email || !password) {
-//     return res
-//       .status(400)
-//       .json({ error: "username, email and password are required!" });
-//   }
+  if (Object.keys(updatePayload).length === 0) {
+    return res.status(400).json({
+      success: false,
+      error: "At least one field is required to update",
+    });
+  }
 
-//   user.username = username;
-//   user.email = email;
-//   user.password = password;
+  try {
+    const doc = await User.findByIdAndUpdate(id, updatePayload, {
+      new: true,
+      runValidators: true,
+    });
 
-//   return res.status(200).json(user);
-// });
+    if (!doc) {
+      return res.status(404).json({ success: false, error: "User not found" });
+    }
 
-// router.delete("/:id", async (req, res) => {
-//   const userIndex = users.findIndex((u) => u.id === String(req.params.id));
+    return res.status(200).json({ success: true, data: userResponse(doc) });
+  } catch (err) {
+    return res.status(400).json({ success: false, error: err.message });
+  }
+});
 
-//   if (userIndex === -1) {
-//     return res.status(404).json({ error: "User not found" });
-//   }
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
 
-//   const deletedUser = users.splice(userIndex, 1)[0];
+  try {
+    const doc = await User.findByIdAndDelete(id);
 
-//   return res.status(200).json(deletedUser);
-// });
+    if (!doc) {
+      return res.status(404).json({ success: false, error: "User not found" });
+    }
+
+    return res.status(200).json({ success: true, data: userResponse(doc) });
+  } catch (err) {
+    return res.status(400).json({ success: false, error: err.message });
+  }
+});
 
 //Supabase/PostgreSQL routes (/api/v2/users/pg)
 const PG_SELECT = "id, username, email, role, created_at, updated_at ";
