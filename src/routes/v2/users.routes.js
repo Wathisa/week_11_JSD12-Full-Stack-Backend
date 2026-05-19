@@ -10,6 +10,8 @@ import {
 
 export const router = Router();
 
+// MongoDB route
+
 router.get("/", getUsers);
 
 router.post("/", createUser);
@@ -18,7 +20,9 @@ router.put("/:id", updateUser);
 
 router.delete("/:id", deleteUser);
 
-//Supabase/PostgreSQL routes (/api/v2/users/pg)
+// Supabase/PostgreSQL routes (/api/v2/users/pg)
+// Password is included from SELECT
+
 const PG_SELECT = "id, username, email, role, created_at, updated_at ";
 
 router.get("/pg", async (req, res) => {

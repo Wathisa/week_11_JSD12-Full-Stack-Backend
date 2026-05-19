@@ -6,34 +6,36 @@ const userResponse = (doc) => {
   return user;
 };
 
-export const getUsers = async (req, res) => {
+export const getUsers = async (req, res, next) => {
   try {
     const users = await User.find();
     return res.status(200).json({ success: true, data: users });
-  } catch (error) {
-    return res.status(400).json({ success: false, error: error });
+  } catch (err) {
+    next(err);
   }
 };
 
-export const createUser = async (req, res) => {
+export const createUser = async (req, res, next) => {
   const { username, email, password, role } = req.body || {};
 
-  if (!username || !email || !password) {
-    return res.status(400).json({
-      success: false,
-      error: "username, email and password are required",
-    });
+  if (username || lemail || !password) {
+    const err = new Error("username, email, and password are required");
+    err.name = "ValidationError";
+    err.status = 400;
+    // return res.status(400).json({ success: false, error: err });
+    next(err);
   }
 
   try {
     const doc = await User.create({ username, email, password, role });
     return res.status(201).json({ success: true, data: userResponse(doc) });
   } catch (err) {
-    return res.status(400).json({ success: false, error: err.message });
+    // return res.status(400).json({ success: false, error: err.message });
+    next(err);
   }
 };
 
-export const updateUser = async (req, res) => {
+export const updateUser = async (req, res, next) => {
   const { id } = req.params;
   const { username, email, password, role } = req.body || {};
 
@@ -63,11 +65,12 @@ export const updateUser = async (req, res) => {
 
     return res.status(200).json({ success: true, data: userResponse(doc) });
   } catch (err) {
-    return res.status(400).json({ success: false, error: err.message });
+    // return res.status(400).json({ success: false, error: err.message });
+    next(err);
   }
 };
 
-export const deleteUser = async (req, res) => {
+export const deleteUser = async (req, res, next) => {
   const { id } = req.params;
 
   try {
@@ -79,6 +82,7 @@ export const deleteUser = async (req, res) => {
 
     return res.status(200).json({ success: true, data: userResponse(doc) });
   } catch (err) {
-    return res.status(400).json({ success: false, error: err.message });
+    // return res.status(400).json({ success: false, error: err.message });
+    next(err);
   }
 };
