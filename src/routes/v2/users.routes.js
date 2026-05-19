@@ -1,92 +1,22 @@
 import { Router } from "express";
 import { User } from "../../modules/users/user.model.js";
 import { supabase } from "../../config/supabase.js";
+import {
+  getUsers,
+  createUser,
+  updateUser,
+  deleteUser,
+} from "../../modules/users/users.v2.controller.js";
 
 export const router = Router();
 
-// MongoDB routes (/api/v2/users)
-const userResponse = (doc) => {
-  const user = doc.toObject();
-  delete user.password;
-  return user;
-};
+router.get("/", getUsers);
 
-router.get("/", async (req, res) => {
-  try {
-    const users = await User.find();
-    return res.status(200).json({ success: true, data: users });
-  } catch (error) {
-    return res.status(400).json({ success: false, error: error });
-  }
-});
+router.post("/", createUser);
 
-router.post("/", async (req, res) => {
-  const { username, email, password, role } = req.body || {};
+router.put("/:id", updateUser);
 
-  if (!username || !email || !password) {
-    return res.status(400).json({
-      success: false,
-      error: "username, email and password are required",
-    });
-  }
-
-  try {
-    const doc = await User.create({ username, email, password, role });
-    return res.status(201).json({ success: true, data: userResponse(doc) });
-  } catch (err) {
-    return res.status(400).json({ success: false, error: err.message });
-  }
-});
-
-router.put("/:id", async (req, res) => {
-  const { id } = req.params;
-  const { username, email, password, role } = req.body || {};
-
-  const updatePayload = {};
-
-  if (username !== undefined) updatePayload.username = username;
-  if (email !== undefined) updatePayload.email = email;
-  if (password !== undefined) updatePayload.password = password;
-  if (role !== undefined) updatePayload.role = role;
-
-  if (Object.keys(updatePayload).length === 0) {
-    return res.status(400).json({
-      success: false,
-      error: "At least one field is required to update",
-    });
-  }
-
-  try {
-    const doc = await User.findByIdAndUpdate(id, updatePayload, {
-      new: true,
-      runValidators: true,
-    });
-
-    if (!doc) {
-      return res.status(404).json({ success: false, error: "User not found" });
-    }
-
-    return res.status(200).json({ success: true, data: userResponse(doc) });
-  } catch (err) {
-    return res.status(400).json({ success: false, error: err.message });
-  }
-});
-
-router.delete("/:id", async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    const doc = await User.findByIdAndDelete(id);
-
-    if (!doc) {
-      return res.status(404).json({ success: false, error: "User not found" });
-    }
-
-    return res.status(200).json({ success: true, data: userResponse(doc) });
-  } catch (err) {
-    return res.status(400).json({ success: false, error: err.message });
-  }
-});
+router.delete("/:id", deleteUser);
 
 //Supabase/PostgreSQL routes (/api/v2/users/pg)
 const PG_SELECT = "id, username, email, role, created_at, updated_at ";
