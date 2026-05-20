@@ -59,7 +59,6 @@ export const createUser = async (req, res, next) => {
     const err = new Error("username, email, and password are required");
     err.name = "ValidationError";
     err.status = 400;
-    // return res.status(400).json({ success: false, error: err });
     return next(err);
   }
 
@@ -74,18 +73,29 @@ export const createUser = async (req, res, next) => {
       return next(err);
     }
 
-    const hashedPassword = await bcrypt.hash(password, 12);
+    // เดิมเรา hash ใน controller เอง
+    // const hashedPassword = await bcrypt.hash(password, 12);
 
-    // 3) create user
-    const doc = await User.create({
+    // เดิมเรา create แบบส่ง hashedPassword เข้าไป
+    // const doc = await User.create({
+    //   username,
+    //   email,
+    //   password: hashedPassword,
+    //   role,
+    // });
+
+    // เวอร์ชันสุดท้าย: ให้ model เป็นคน hash password ผ่าน pre("save")
+    const newUser = new User({
       username,
       email,
-      password: hashedPassword,
+      password,
       role,
     });
+
+    const doc = await newUser.save();
+
     return res.status(201).json({ success: true, data: userResponse(doc) });
   } catch (err) {
-    // return res.status(400).json({ success: false, error: err.message });
     return next(err);
   }
 };
