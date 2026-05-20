@@ -20,6 +20,16 @@ Content-Type: application/json
   "password": "password1234"
 }
 
+### Login user (MongoDB)
+POST http://localhost:3002/api/v2/users/login
+Content-Type: application/json
+
+{
+  "email": "test-register2@example.com",
+  "password": "password1234"
+}
+
+
 ### Update a user (MongoDB) - replace the ObjectId with a real id from POST response
 PUT http://localhost:3002/api/v2/users/682aabd62ef0f8ebf2e12345
 Content-Type: application/json

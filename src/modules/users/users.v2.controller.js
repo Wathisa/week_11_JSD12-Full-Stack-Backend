@@ -7,6 +7,41 @@ const userResponse = (doc) => {
   return user;
 };
 
+export const loginUser = async (req, res, next) => {
+  const { email, password } = req.body || {};
+
+  if (!email || !password) {
+    const err = new Error("email and password are required");
+    err.name = "ValidationError";
+    err.status = 400;
+    return next(err);
+  }
+
+  try {
+    const userInDB = await User.findOne({ email }).select("+password");
+
+    if (!userInDB) {
+      const err = new Error("email or password is incorrect");
+      err.name = "AuthenticationError";
+      err.status = 400;
+      return next(err);
+    }
+
+    const isMatch = await bcrypt.compare(password, userInDB.password);
+
+    if (!isMatch) {
+      const err = new Error("email or password is incorrect");
+      err.name = "AuthenticationError";
+      err.status = 400;
+      return next(err);
+    }
+
+    return res.status(200).json({ success: true, message: "login successful" });
+  } catch (err) {
+    return next(err);
+  }
+};
+
 export const getUsers = async (req, res, next) => {
   try {
     const users = await User.find();

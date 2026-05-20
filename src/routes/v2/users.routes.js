@@ -2,6 +2,7 @@ import { Router } from "express";
 import { User } from "../../modules/users/user.model.js";
 import { supabase } from "../../config/supabase.js";
 import {
+  loginUser,
   getUsers,
   createUser,
   updateUser,
@@ -11,13 +12,10 @@ import {
 export const router = Router();
 
 // MongoDB route
-
+router.post("/login", loginUser);
 router.get("/", getUsers);
-
 router.post("/", createUser);
-
 router.put("/:id", updateUser);
-
 router.delete("/:id", deleteUser);
 
 // Supabase/PostgreSQL routes (/api/v2/users/pg)
