@@ -1,4 +1,5 @@
 import { User } from "./user.model.js";
+import bcrypt from "bcrypt";
 
 const userResponse = (doc) => {
   const user = doc.toObject();
@@ -18,20 +19,39 @@ export const getUsers = async (req, res, next) => {
 export const createUser = async (req, res, next) => {
   const { username, email, password, role } = req.body || {};
 
-  if (username || email || !password) {
+  // 1) validate
+  if (!username || !email || !password) {
     const err = new Error("username, email, and password are required");
     err.name = "ValidationError";
     err.status = 400;
     // return res.status(400).json({ success: false, error: err });
-    next(err);
+    return next(err);
   }
 
   try {
-    const doc = await User.create({ username, email, password, role });
+    // 2) check duplicate email
+    const existingUser = await User.findOne({ email });
+
+    if (existingUser) {
+      const err = new Error("email is already in use");
+      err.name = "ValidationError";
+      err.status = 400;
+      return next(err);
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    // 3) create user
+    const doc = await User.create({
+      username,
+      email,
+      password: hashedPassword,
+      role,
+    });
     return res.status(201).json({ success: true, data: userResponse(doc) });
   } catch (err) {
     // return res.status(400).json({ success: false, error: err.message });
-    next(err);
+    return next(err);
   }
 };
 
@@ -66,7 +86,7 @@ export const updateUser = async (req, res, next) => {
     return res.status(200).json({ success: true, data: userResponse(doc) });
   } catch (err) {
     // return res.status(400).json({ success: false, error: err.message });
-    next(err);
+    return next(err);
   }
 };
 
@@ -83,6 +103,6 @@ export const deleteUser = async (req, res, next) => {
     return res.status(200).json({ success: true, data: userResponse(doc) });
   } catch (err) {
     // return res.status(400).json({ success: false, error: err.message });
-    next(err);
+    return next(err);
   }
 };

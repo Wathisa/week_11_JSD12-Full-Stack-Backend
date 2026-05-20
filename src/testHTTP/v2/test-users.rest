@@ -14,10 +14,10 @@ POST http://localhost:3002/api/v2/users
 Content-Type: application/json
 
 {
-    "username": "Mongo User",
-    "role": "user",
-    "email": "mongo-user@example.com",
-    "password": "password123"
+  "username": "Test Register2",
+  "role": "user",
+  "email": "test-register2@example.com",
+  "password": "password1234"
 }
 
 ### Update a user (MongoDB) - replace the ObjectId with a real id from POST response
