@@ -1,0 +1,59 @@
+@baseUrl = http://localhost:3002/api/v2/users
+
+
+@validEmail    = test-register3@example.com
+@validPassword = password12345
+
+
+###
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+    "email": "{{validEmail}}",
+    "password": "{{validPassword}}"
+}
+
+###
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+    "email": "{{validEmail}}"
+}
+
+###
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+    "email": "{{validEmail}}",
+    "password": "wrongpassword"
+}
+
+###
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+    "email": "doesnotexist@example.com",
+    "password": "password12345"
+}
+
+### 5. 
+### The REST Client stores the Set-Cookie header from request #1 automatically.
+GET {{baseUrl}}/auth/me
+
+###
+GET {{baseUrl}}/auth/me
+Cookie: accessToken=
+
+###
+GET {{baseUrl}}/auth/me
+Cookie: accessToken=this.is.not.a.valid.jwt
+
+###
+POST {{baseUrl}}/auth/logout
+
+###
+GET {{baseUrl}}/auth/me
