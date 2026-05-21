@@ -1,5 +1,6 @@
 import { User } from "./user.model.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 const userResponse = (doc) => {
   const user = doc.toObject();
@@ -36,7 +37,30 @@ export const loginUser = async (req, res, next) => {
       return next(err);
     }
 
-    return res.status(200).json({ success: true, message: "login successful" });
+    const token = jwt.sign({ userId: userInDB._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h", // 1 hours expiration
+    });
+
+    const isProd = process.env.NODE_ENV === "production";
+
+    res.cookie("accessToken", token, {
+      httpOnly: true,
+      secure: isProd, // only send over HTTPS in production
+      sameSite: isProd ? "none" : "lax",
+      path: "/",
+      maxAge: 60 * 60 * 1000, // 1hour
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "login successful",
+      user: {
+        _id: userInDB._id,
+        username: userInDB.username,
+        email: userInDB.email,
+        role: userInDB.role,
+      },
+    });
   } catch (err) {
     return next(err);
   }

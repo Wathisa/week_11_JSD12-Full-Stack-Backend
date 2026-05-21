@@ -8,6 +8,7 @@ import {
   updateUser,
   deleteUser,
 } from "../../modules/users/users.v2.controller.js";
+import { authUser } from "../../middlewares/auth.js";
 
 export const router = Router();
 
@@ -17,6 +18,50 @@ router.get("/", getUsers);
 router.post("/", createUser);
 router.put("/:id", updateUser);
 router.delete("/:id", deleteUser);
+
+// Check user session/token
+router.get("/auth/me", authUser, async (req, res, next) => {
+  try {
+    const userId = req.user.user._id;
+    const user = User.findById(userId);
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "User not found!",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Logout a user
+router.post("/auth/logout", (req, res) => {
+  const isProd = process.env.NODE_ENV === "production";
+
+  res.clearCookie("accessToken", {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: isProd ? "none" : "lax",
+    path: "/",
+  });
+
+  return res.status(200).json({
+    success: true,
+    message: "Logged out successfully!",
+  });
+});
 
 // Supabase/PostgreSQL routes (/api/v2/users/pg)
 // Password is included from SELECT
