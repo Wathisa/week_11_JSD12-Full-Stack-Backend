@@ -1,0 +1,21 @@
+@baseUrl = http://localhost:3002/api/v2/users
+@validEmail = banana@example.com
+@validPassword = banana12345
+
+### 1) Login
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "email": "{{validEmail}}",
+  "password": "{{validPassword}}"
+}
+
+### 2) Check session
+GET {{baseUrl}}/auth/me
+
+### 3) Logout
+POST {{baseUrl}}/auth/logout
+
+### 4) Check session after logout
+GET {{baseUrl}}/auth/me

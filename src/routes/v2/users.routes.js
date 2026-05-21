@@ -23,7 +23,7 @@ router.delete("/:id", deleteUser);
 router.get("/auth/me", authUser, async (req, res, next) => {
   try {
     const userId = req.user.user._id;
-    const user = User.findById(userId);
+    const user = await User.findById(userId);
 
     if (!user) {
       return res.status(401).json({

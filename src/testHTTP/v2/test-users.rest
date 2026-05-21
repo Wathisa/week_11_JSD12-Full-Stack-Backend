@@ -14,10 +14,10 @@ POST http://localhost:3002/api/v2/users
 Content-Type: application/json
 
 {
-  "username": "Test Register3",
+  "username": "Banana",
   "role": "user",
-  "email": "test-register3@example.com",
-  "password": "password12345"
+  "email": "banana@example.com",
+  "password": "banana12345"
 }
 
 ### Login user (MongoDB)
@@ -25,8 +25,8 @@ POST http://localhost:3002/api/v2/users/login
 Content-Type: application/json
 
 {
-  "email": "test-register3@example.com",
-  "password": "password12345"
+  "email": "banana@example.com",
+  "password": "banana12345"
 }
 
 
