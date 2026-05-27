@@ -1,6 +1,7 @@
 import { User } from "./user.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { queueEmbedUserById } from "./user.embedding.js";
 
 const userResponse = (doc) => {
   const user = doc.toObject();
@@ -117,6 +118,7 @@ export const createUser = async (req, res, next) => {
     });
 
     const doc = await newUser.save();
+    queueEmbedUserById(doc._id);
 
     return res.status(201).json({ success: true, data: userResponse(doc) });
   } catch (err) {
@@ -150,6 +152,14 @@ export const updateUser = async (req, res, next) => {
 
     if (!doc) {
       return res.status(404).json({ success: false, error: "User not found" });
+    }
+
+    if (
+      username !== undefined ||
+      email !== undefined ||
+      role !== undefined
+    ) {
+      queueEmbedUserById(doc._id);
     }
 
     return res.status(200).json({ success: true, data: userResponse(doc) });
