@@ -9,7 +9,11 @@ import { connectSupabase } from "./config/supabase.js";
 import { limiter } from "./middlewares/rateLimiter.js";
 
 const app = express();
-const allowedOrigins = ["http://localhost:5173", "http://localhost:5174"];
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "https://week-13-jsd-12-full-stack-frontend2.vercel.app",
+];
 
 app.use(helmet());
 
