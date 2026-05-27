@@ -1,24 +1,25 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import helmet from "helmet";
 
 import { router as apiRoutes } from "./routes/index.js";
 import { connectDB } from "./config/mongodb.js";
 import { connectSupabase } from "./config/supabase.js";
+import { limiter } from "./middlewares/rateLimiter.js";
 
 const app = express();
-const allowedOrigins = [
-  "http://localhost:5173",
-  "http://localhost:5174",
-];
+const allowedOrigins = ["http://localhost:5173", "http://localhost:5174"];
+
+app.use(helmet());
 
 app.use(
   cors({
     origin: allowedOrigins,
-    credentials: true,
+    credentials: true, // allow cookied to be sent
   }),
 );
-
+app.use(limiter);
 app.use(express.json());
 
 app.use(cookieParser());
@@ -57,6 +58,8 @@ app.get("/", (req, res) => {
     </body>
   </html>`);
 });
+
+// Centralized error for 404 Not Found
 
 // Centralized error handling middleware
 app.use((err, req, res, next) => {
